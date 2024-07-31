@@ -1,5 +1,7 @@
 const mongoose = require("mongoose"); // Erase if already required
 const bcrypt = require("bcrypt");
+const crypto = require("crypto");
+
 // Declare the Schema of the Mongo model
 var userSchema = new mongoose.Schema(
   {
@@ -59,7 +61,7 @@ var userSchema = new mongoose.Schema(
   },
   { timestamps: true }
 );
-
+// Hash password to bcrypt
 userSchema.pre("save", async function (next) {
   if (!this.isModified("password")) {
     next();
@@ -67,6 +69,24 @@ userSchema.pre("save", async function (next) {
   const salt = bcrypt.genSaltSync(10);
   this.password = await bcrypt.hash(this.password, salt);
 });
+
+// Method to check password of User
+userSchema.methods = {
+  isCorrectPassword: async function (password) {
+    return await bcrypt.compare(password, this.password);
+  },
+  createPasswordChangeToken: function () {
+    // Hệ thập lục phân hex
+    const resetToken = crypto.randomBytes(32).toString("hex");
+    this.passwordResetToken = crypto
+      .createHash("sha256")
+      .update(resetToken)
+      .digest("hex");
+    // Expires of password token
+    this.passwordResetExpires = Date.now() + 15 * 60 * 1000;
+    return resetToken;
+  },
+};
 
 //Export the model
 module.exports = mongoose.model("User", userSchema);
