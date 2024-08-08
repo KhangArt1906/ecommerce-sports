@@ -15,6 +15,14 @@ Router.get("/", [verifyAccessToken, isAdmin], controllers.getUsers);
 Router.delete("/", [verifyAccessToken, isAdmin], controllers.deleteUser);
 // Update an user
 Router.put("/current", [verifyAccessToken, isAdmin], controllers.updateUser);
+// Update Address by admin
+Router.put(
+  "/address",
+  [verifyAccessToken, isAdmin],
+  controllers.updateUserAddress
+);
+// Update User Cart
+Router.put("/cart", [verifyAccessToken], controllers.updateCart);
 // Update user by admin
 Router.put(
   "/:uid",
