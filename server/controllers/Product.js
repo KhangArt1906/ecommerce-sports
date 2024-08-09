@@ -39,7 +39,6 @@ const getProducts = asyncHandler(async (req, res) => {
     (match) => `$${match}`
   );
   const formatedQueries = JSON.parse(queryString);
-  console.log(formatedQueries);
 
   //  Filtering products
   if (queries?.title)
