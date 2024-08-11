@@ -46,7 +46,6 @@ const getProducts = asyncHandler(async (req, res) => {
   let queryCommand = Product.find(formatedQueries);
 
   //Sorting products
-  //123,456 => [123,456]
   if (req.query.sort) {
     const sortBy = req.query.sort.split(",").join(" ");
     // console.log(sortBy);
